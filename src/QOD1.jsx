@@ -136,46 +136,47 @@ export default function QOD() {
             incorrectAnswerInfo: "Spill kits help prevent accidents by cleaning up hazardous spills."
         }
     ];
-    
+
+    const nQuestion = Math.floor(Math.random() * questions.length);
+    const selectedQuestion = questions[nQuestion];
+
     const surveyJson = {
         title: "Daily Safety Quiz",
-        showCorrectAnswer: "always",
         showProgressBar: "bottom",
         firstPageIsStarted: true,
         startSurveyText: "Start Quiz",
-        pages: [{
-            elements: [{
-                type: "html",
-                html: "You are about to start a daily quiz on workplace safety. <br>Please answer the questions based on best practices and guidelines.<br>Enter your name below and click <b>Start Quiz</b> to begin."
-            }, {
-                type: "text",
-                name: "username",
-                titleLocation: "hidden",
-                isRequired: true
-            }]
-        }, {
-            elements: questions
-        }]
+        pages: [
+            {
+                elements: [
+                    {
+                        type: "html",
+                        html: "You are about to start a daily quiz on workplace safety. <br>Please answer the questions based on best practices and guidelines.<br>Enter your name below and click <b>Start Quiz</b> to begin."
+                    },
+                    {
+                        type: "text",
+                        name: "username",
+                        titleLocation: "hidden",
+                        isRequired: true
+                    }
+                ]
+            },
+            {
+                elements: [selectedQuestion]
+            }
+        ]
     };
+
     const survey = new Model(surveyJson);
 
     survey.onComplete.add(function (sender) {
-        var questions = sender.getAllQuestions();
-        for (var i = 0; i < questions.length; i++) {
-            var question = questions[i];
-            var correctAnswer = question.correctAnswer;
-            var userAnswer = question.value;
-            var questionTitle = question.title;
-            if (userAnswer !== correctAnswer) {
-                console.log(`Question: ${questionTitle}`);
-                console.log(`Correct Answer: ${correctAnswer}`);
-                console.log(`Your Answer: ${userAnswer} - Incorrect`);
-                console.log(`Note: ${question.incorrectAnswerInfo}`);
-            } else {
-                console.log(`Question: ${questionTitle}`);
-                console.log(`Correct Answer: ${correctAnswer}`);
-                console.log(`Your Answer: ${userAnswer} - Correct`);
-            }
+        const question = sender.getQuestionByName(selectedQuestion.name);
+        const correctAnswer = question.correctAnswer;
+        const userAnswer = question.value;
+
+        if (userAnswer !== correctAnswer) {
+            alert(`Incorrect Answer: ${selectedQuestion.incorrectAnswerInfo}`);
+        } else {
+            alert("Correct Answer: Well done!");
         }
     });
 

@@ -1,4 +1,4 @@
-import QOD from './QOD.jsx'
+import QOD from './QOD1.jsx'
 
 function App() {
 
